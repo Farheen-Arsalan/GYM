@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Theme tokens ---------- */
+:root,
+.dark {
+  --bg: 6 8 11;
+  --bg-2: 13 16 21;
+  --fg: 240 244 236;
+  --muted: 140 151 163;
+  --line: 255 255 255;
+  --line-a: 0.08;
+  --glass: 255 255 255;
+  --glass-a: 0.035;
+  --lime: 198 255 61;
+  --cyan: 34 211 238;
+  --accent-ink: 198 255 61;
+  --grad-a: 198 255 61;
+  --grad-b: 34 211 238;
+  color-scheme: dark;
+}
+
+.light {
+  --bg: 243 246 240;
+  --bg-2: 255 255 255;
+  --fg: 11 15 20;
+  --muted: 88 98 110;
+  --line: 11 15 20;
+  --line-a: 0.08;
+  --glass: 255 255 255;
+  --glass-a: 0.72;
+  --lime: 170 240 40;
+  --cyan: 14 190 220;
+  --accent-ink: 77 124 15;
+  --grad-a: 101 163 13;
+  --grad-b: 8 145 178;
+  color-scheme: light;
+}
+
+/* Class-type colours (text, stripes, bars), stepped darker on light backgrounds */
+:root,
+.dark {
+  --type-yoga: 167 139 250;
+  --type-hiit: 198 255 61;
+  --type-spin: 34 211 238;
+  --type-boxing: 251 113 133;
+}
+.light {
+  --type-yoga: 109 40 217;
+  --type-hiit: 77 124 15;
+  --type-spin: 14 116 144;
+  --type-boxing: 190 18 60;
+}
+
+/* Accent text colours tuned for dark backgrounds are too faint on light ones */
+.light .text-orange-400 { color: #c2410c; }
+.light .text-rose-400 { color: #be123c; }
+.light .text-amber-400 { color: #b45309; }
+.light .text-slate-300 { color: #475569; }
+.light .text-cyan { color: #0e7490; }
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    min-height: 100dvh;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+  ::selection {
+    background: rgb(var(--lime) / 0.35);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line) / 0.15) transparent;
+  }
+}
+
+@layer components {
+  .glass {
+    /* clip decorative glows to the card so they never cause sideways scrolling */
+    overflow: hidden;
+    background: rgb(var(--glass) / var(--glass-a));
+    border: 1px solid rgb(var(--line) / var(--line-a));
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    @apply rounded-3xl shadow-card;
+  }
+  .light .glass {
+    box-shadow: 0 1px 2px rgb(11 15 20 / 0.04), 0 18px 40px -24px rgb(11 15 20 / 0.18);
+  }
+  .text-gradient {
+    background: linear-gradient(95deg, rgb(var(--grad-a)), rgb(var(--grad-b)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-brand {
+    background: linear-gradient(110deg, rgb(var(--lime)), rgb(var(--cyan)));
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-semibold text-sm
+      transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime/60;
+  }
+  .btn-primary {
+    @apply btn text-onaccent bg-gradient-brand shadow-glow hover:brightness-110 hover:-translate-y-0.5;
+  }
+  .btn-ghost {
+    @apply btn border border-line/10 bg-fg/[0.04] hover:bg-fg/[0.08] text-fg;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border border-line/10 bg-fg/[0.04];
+  }
+  .label {
+    @apply text-[11px] uppercase tracking-[0.14em] text-muted font-semibold;
+  }
+  .grid-bg {
+    background-image: linear-gradient(rgb(var(--line) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+  }
+  .skeleton {
+    background: linear-gradient(
+      100deg,
+      rgb(var(--fg) / 0.05) 30%,
+      rgb(var(--lime) / 0.12) 50%,
+      rgb(var(--fg) / 0.05) 70%
+    );
+    background-size: 300% 100%;
+    animation: skeleton-sweep 1.6s ease-in-out infinite;
+  }
+  @keyframes skeleton-sweep {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+  }
+  .input {
+    @apply w-full rounded-2xl border border-line/10 bg-fg/[0.04] px-4 py-3 text-sm text-fg outline-none transition
+      placeholder:text-muted focus:border-lime/40 focus:ring-2 focus:ring-lime/25;
+  }
+  .noise::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Recharts tweaks */
+.recharts-cartesian-grid line {
+  stroke: rgb(var(--line) / 0.07);
+}
+.recharts-text {
+  fill: rgb(var(--muted));
+  font-size: 12px;
+}
+.recharts-surface:focus,
+.recharts-wrapper:focus,
+.recharts-sector:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
